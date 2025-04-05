@@ -34,9 +34,9 @@ def PRINT_INSTR(): # responsible for formatting the instructions
 def get_steg_path(): # this function returns the path to the steghide binary based on the OS of the running device
     opsys = platform.system() # finds OS of the running device and references the steghide in bin accordingly
     if opsys == "Windows":
-        return os.path.join("bin", "steghide.exe")
+        return os.path.join("bin", "Windows", "steghide.exe")
     elif opsys in ["Linux", "Darwin"]:  # Darwin = macOS
-        return os.path.join("bin", "steghide")
+        return os.path.join("bin", "Unix", "steghide")
     else:
         raise Exception("Unsupported OS")
 
