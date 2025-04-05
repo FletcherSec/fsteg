@@ -1,4 +1,7 @@
 import sys
+import subprocess
+import os
+import platform
 
 def CALL_LOGO(): # function prints out logo upon call
     Logo = r"""
@@ -28,7 +31,25 @@ def PRINT_INSTR(): # responsible for formatting the instructions
     """
     print(instr)
 
+def steg_extract(self, spath, passw):
+    self.spath = spath # this just uses self to set the argument to a variable
+    self.passw = passw 
+    build_cmd = [ # this builds out the steghide command to perform the extraction
+        spath,
+        "extract",
+        "-sf", fpath,
+        "-p", passw,
+        "-xf", "extracted.txt"
+    ]
+
 def Lfunction():
+    opsys = platform.system() # finds OS of the running device and references the steghide in bin accordingly
+    if opsys == "Windows":
+        return os.path.join("bin", "steghide.exe")
+    elif opsys in ["Linux", "Darwin"]:  # Darwin = macOS
+        return os.path.join("bin", "steghide")
+    else:
+        raise Exception("Unsupported OS")
     print("Write Me!")
 
 def Lpfunction():
@@ -54,5 +75,6 @@ if __name__ == "__main__": # main function; calls init() when provided with a fi
     if (len(sys.argv)) < 2:
         print("Example Usage: python3 fsteg.py file")
     else:
+        fpath = sys.argv[1] #!! Add code here to verify that the image path is a valid filepath
         CALL_LOGO()
         init()
