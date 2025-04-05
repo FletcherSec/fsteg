@@ -50,6 +50,8 @@ def Lfunction():
         return os.path.join("bin", "steghide")
     else:
         raise Exception("Unsupported OS")
+    
+    # ^ We need to call steg_extract with this path
     print("Write Me!")
 
 def Lpfunction():
