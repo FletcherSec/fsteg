@@ -40,9 +40,7 @@ def get_steg_path(): # this function returns the path to the steghide binary bas
     else:
         raise Exception("Unsupported OS")
 
-def steg_extract(self, spath, passw):
-    self.spath = spath # this just uses self to set the argument to a variable
-    self.passw = passw 
+def steg_extract(spath, passw):
     build_cmd = [ # this builds out the steghide command to perform the extraction
         spath,
         "extract",
@@ -51,11 +49,16 @@ def steg_extract(self, spath, passw):
         "-xf", "extracted.txt"
     ]
 
+    try: # runs command with subprocess
+        result = subprocess.run(build_cmd, capture_output=True, text=True, check=True)
+        print("Steghide Output:", result.stdout)
+    except subprocess.CalledProcessError as e:
+        print("Error:", e.stderr)
+
 def Lfunction(): # gathers steghide filepath and then calls the stegextract function with no pass.
     relpath = get_steg_path()
     nopass = ""
     steg_extract(relpath, nopass)
-    print("Write Me!")
 
 def Lpfunction():
     print("Write Me!")
@@ -80,6 +83,7 @@ if __name__ == "__main__": # main function; calls init() when provided with a fi
     if (len(sys.argv)) < 2:
         print("Example Usage: python3 fsteg.py file")
     else:
+        global fpath #global var for the image path fsteg is running on
         fpath = sys.argv[1] #!! Add code here to verify that the image path is a valid filepath
         CALL_LOGO()
         init()
