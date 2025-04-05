@@ -31,6 +31,15 @@ def PRINT_INSTR(): # responsible for formatting the instructions
     """
     print(instr)
 
+def get_steg_path(): # this function returns the path to the steghide binary based on the OS of the running device
+    opsys = platform.system() # finds OS of the running device and references the steghide in bin accordingly
+    if opsys == "Windows":
+        return os.path.join("bin", "steghide.exe")
+    elif opsys in ["Linux", "Darwin"]:  # Darwin = macOS
+        return os.path.join("bin", "steghide")
+    else:
+        raise Exception("Unsupported OS")
+
 def steg_extract(self, spath, passw):
     self.spath = spath # this just uses self to set the argument to a variable
     self.passw = passw 
@@ -42,16 +51,10 @@ def steg_extract(self, spath, passw):
         "-xf", "extracted.txt"
     ]
 
-def Lfunction():
-    opsys = platform.system() # finds OS of the running device and references the steghide in bin accordingly
-    if opsys == "Windows":
-        return os.path.join("bin", "steghide.exe")
-    elif opsys in ["Linux", "Darwin"]:  # Darwin = macOS
-        return os.path.join("bin", "steghide")
-    else:
-        raise Exception("Unsupported OS")
-    
-    # ^ We need to call steg_extract with this path
+def Lfunction(): # gathers steghide filepath and then calls the stegextract function with no pass.
+    relpath = get_steg_path()
+    nopass = ""
+    steg_extract(relpath, nopass)
     print("Write Me!")
 
 def Lpfunction():
