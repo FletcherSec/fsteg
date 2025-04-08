@@ -20,12 +20,26 @@ def QUIT(): # closes Fsteg
     except SystemExit:
         pass
 
+def check_output_name(): #this function is responsible for making sure output filenames dont overlap
+    default = "extracted_file"
+    newfilename = default
+    # Here an extension could read from the file fsteg could be read and appended to the output file.  I'll do this eventually.
+    count = 1
+
+    while os.path.exists(newfilename): #this increments a count number to the end of the filename until the filename doesn't already exist in the directory.
+        newfilename = f"{default}_{count}"
+        count += 1
+    return newfilename
+
 def PRINT_INSTR(): # responsible for formatting the instructions
     instr = r"""
   To continue, please enter a flag to be run on the file. (Enter the flag letter without the '-')
 
-  -L : Uses LSB steganography to check for hidden data.
-  -Lp [password] : Uses LSB steganography to check for hidden data with a password
+  -S : Uses steghide to check files (JPEG, BMP, WAV, and AU) for data hidden with Steghide.
+  -Sp [password] : Uses steghide to check for hidden data with a password.
+  -Sb : Bruteforces steghide password with a wordlist. (To be implemented)
+  -Z : Uses zsteg to check files for data hidden with LSB steganography. (To be implemented)
+  -A : Runs all tools in succession on specified file. (To be implemented)
   -q : Exits Fsteg
 
     """
@@ -41,34 +55,39 @@ def get_steg_path(): # this function returns the path to the steghide binary bas
         raise Exception("Unsupported OS")
 
 def steg_extract(spath, passw):
+    outfilename = check_output_name()
     build_cmd = [ # this builds out the steghide command to perform the extraction
         spath,
         "extract",
         "-sf", fpath,
         "-p", passw,
-        "-xf", "extracted.txt"
+        "-xf", outfilename
     ]
 
     try: # runs command with subprocess
         result = subprocess.run(build_cmd, capture_output=True, text=True, check=True)
-        print("\nSteghide Output:", result.stdout)
+        print("\nSteghide Output: File Extracted Successfully, Printing Contents Below!")
+        try:
+            subprocess.run(["cat", outfilename]) # this line can be commented out if you dont want the contents of the file being printed in the program upon extraction.
+        except subprocess.CalledProcessError as e: # this try except is to handle errors from windows (no cat command), since windows support isnt implemented yet.
+            print("\nError:", e.stderr)
     except subprocess.CalledProcessError as e:
         print("\nError:", e.stderr)
 
-def Lfunction(): # gathers steghide filepath and then calls the stegextract function with no pass.
+def Sfunction(): # gathers steghide filepath and then calls the stegextract function with no pass.
     relpath = get_steg_path()
     nopass = ""
     steg_extract(relpath, nopass)
 
-def Lpfunction():
+def Spfunction():
     relpath = get_steg_path()
     print("Enter Passkey:")
     entered_pass = input() # specifies the passkey for steghide
     steg_extract(relpath, entered_pass)
 
 flag_dict = { # This is where the acceptable flags and their associated functions are stored in a dictionary
-    "L" : Lfunction,
-    "Lp" : Lpfunction,
+    "S" : Sfunction,
+    "Sp" : Spfunction,
     "q" : QUIT
 }
 
