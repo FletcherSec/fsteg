@@ -51,9 +51,9 @@ def steg_extract(spath, passw):
 
     try: # runs command with subprocess
         result = subprocess.run(build_cmd, capture_output=True, text=True, check=True)
-        print("Steghide Output:", result.stdout)
+        print("\nSteghide Output:", result.stdout)
     except subprocess.CalledProcessError as e:
-        print("Error:", e.stderr)
+        print("\nError:", e.stderr)
 
 def Lfunction(): # gathers steghide filepath and then calls the stegextract function with no pass.
     relpath = get_steg_path()
@@ -61,7 +61,10 @@ def Lfunction(): # gathers steghide filepath and then calls the stegextract func
     steg_extract(relpath, nopass)
 
 def Lpfunction():
-    print("Write Me!")
+    relpath = get_steg_path()
+    print("Enter Passkey:")
+    entered_pass = input() # specifies the passkey for steghide
+    steg_extract(relpath, entered_pass)
 
 flag_dict = { # This is where the acceptable flags and their associated functions are stored in a dictionary
     "L" : Lfunction,
