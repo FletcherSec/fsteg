@@ -85,9 +85,21 @@ def Spfunction():
     entered_pass = input() # specifies the passkey for steghide
     steg_extract(relpath, entered_pass)
 
+def Sbfunction():
+    print("Write Me!")
+
+def Afunction():
+    print("Write Me!")
+
+def Zfunction():
+    print("Write Me!")
+
 flag_dict = { # This is where the acceptable flags and their associated functions are stored in a dictionary
     "S" : Sfunction,
     "Sp" : Spfunction,
+    "Sb" : Sbfunction,
+    "Z" : Zfunction,
+    "A" : Afunction,
     "q" : QUIT
 }
 
