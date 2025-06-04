@@ -68,7 +68,10 @@ def steg_extract(spath, passw):
         result = subprocess.run(build_cmd, capture_output=True, text=True, check=True)
         print("\nSteghide Output: File Extracted Successfully, Printing Contents Below!")
         try:
-            subprocess.run(["cat", outfilename]) # this line can be commented out if you dont want the contents of the file being printed in the program upon extraction.
+            if platform.system() == "Windows":
+                subprocess.run(["powershell", "-Command", "Start-Process notepad ", outfilename]) # this runs the output in notepad for windows users.
+            else:
+                subprocess.run(["cat", outfilename]) # this line can be commented out if you dont want the contents of the file being printed in the program upon extraction.
         except subprocess.CalledProcessError as e: # this try except is to handle errors from windows (no cat command), since windows support isnt implemented yet.
             print("\nError:", e.stderr)
     except subprocess.CalledProcessError as e:
